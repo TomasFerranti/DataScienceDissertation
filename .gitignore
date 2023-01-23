@@ -55,6 +55,10 @@ coverage.xml
 *.mo
 *.pot
 
+# Node stuff:
+node_modules/
+packages/
+
 # Django stuff:
 *.log
 local_settings.py
@@ -102,7 +106,6 @@ celerybeat.pid
 *.sage.py
 
 # Environments
-packages/
 cache/
 .env
 .venv

@@ -1,12 +1,12 @@
 # TextureExtractor
 cd TextureExtractor
 ## Get three.js
-mkdir -p public/packages
-cd public/packages
+mkdir -p app/public/packages
+cd app/public/packages
 wget https://github.com/mrdoob/three.js/archive/master.zip
 unzip master.zip
 rm master.zip
-cd ../..
+cd ../../..
 ## Build docker image
 docker build --rm -t server:latest .
 

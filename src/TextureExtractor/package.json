@@ -1,0 +1,27 @@
+{
+  "name": "textureextractor",
+  "version": "1.0.0",
+  "description": "Repository created to store the code made for the project Vistas Situadas do Rio de Janeiro in FGV-RJ, with collaboration between Rice University, ImagineRio and Instituto Moreira Salles.",
+  "main": "nodeServer.js",
+  "dependencies": {
+    "express": "^4.17.1",
+    "fs": "^0.0.1-security",
+    "http": "^0.0.1-security",
+    "path": "^0.12.7",
+    "png-js": "^1.0.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/TomasFerranti/TextureExtractor.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/TomasFerranti/TextureExtractor/issues"
+  },
+  "homepage": "https://github.com/TomasFerranti/TextureExtractor#readme"
+}

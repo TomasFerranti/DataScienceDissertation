@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta content='text/html;charset=utf-8' http-equiv='Content-Type'>
+    <meta content='utf-8' http-equiv='encoding'>
+
+    <title>TextureExtractor </title>
+
+    <link rel='stylesheet' href='code/style.css'>
+
+</head>
+
+<body>
+    <div id='universo'>
+        <div id='controles'>
+            <div class='dropdown'>
+                <button class='dropdown-bt'>Files</button>
+                <div class='dropdown-conteudo'>
+                    <a href='javascript:carregarImagemWeb()'>Load Image (web)</a>
+                    <a href='javascript:carregarImagemLocal()'>Load Image (local)</a>
+                    <a href='javascript:baixarImagem()'>Download Image (canvas)</a>
+                    <a href='javascript:salvarJson()'>Save Progress (.json)</a>
+                    <a href='javascript:carregarJson()'>Load Progress (.json)</a>
+                </div>
+            </div>
+            <div class='dropdown'>
+                <button class='dropdown-bt'>Calibration</button>
+                <div class='dropdown-conteudo'>
+                    <a id='btGuiaX' href='javascript:guiaX()'>Axis X</a>
+                    <a id='btGuiaY' href='javascript:guiaY()'>Axis Y</a>
+                    <a id='btGuiaZ' href='javascript:guiaZ()'>Axis Z</a>
+                    <a href='javascript:calcularCam()'>Calibrate</a>
+                </div>
+            </div>
+            <div class='dropdown'>
+                <button class='dropdown-bt'>Extraction</button>
+                <div class='dropdown-conteudo' id='planos'>
+                    <a id='btNovoPlano' href='javascript:botaoNovoPlano()'>New Plane Type</a>
+                    <a id='btTexturaPlano' href='javascript:botaoTexturaPlano()'>Check Plane Texture</a>
+                    <a id='btPlanoYZ' href='javascript:botaoPlanoYZ()'>Plane YZ</a>
+                    <a id='btPlanoXZ' href='javascript:botaoPlanoXZ()'>Plane XZ</a>
+                    <a id='btPlanoXY' href='javascript:botaoPlanoXY()'>Plane XY</a>
+                    <a id='btExtrair' href='javascript:botaoExtrairTextura()'>Extract</a>
+                </div>
+            </div>
+            <div class='dropdown'>
+                <button class='dropdown-bt'>Scaling</button>
+                <div class='dropdown-conteudo'>
+                    <a id='btNovaMetrica' href='javascript:botaoNovaEscala()'>Defining Scale</a>
+                    <a id='btCalcularTamanho' href='javascript:botaoCalcularTamanho()'>Calculate Segment Length</a>
+                </div>
+            </div>
+        </div>
+
+        <div id='subDiv'>
+            <div id='canvasDiv'>
+                <canvas id='imagemCanvas' height='800tr555555555555555t546' width='1200'></canvas>
+            </div>
+            <div id='textDiv'>
+                <span id='output'> Camera calibration is needed <br /> for variables to show up. </span>
+            </div>
+
+            <div id='textDiv'>
+                <span id='dica'> </span>
+            </div>
+
+            <div id='textDiv'>
+                <canvas id='texturaCanvasPlano' height='300' width='300'></canvas>
+            </div>
+        </div>
+    </div>
+
+    <script type='text/javascript' src='/packages/three.js-master/build/three.js'></script>
+    <script type='text/javascript' src='/code/scripts/FlyControls.js'></script>
+    <script type='text/javascript' src='/code/scripts/utils.js'></script>
+    <script type='text/javascript' src='/code/scripts/print.js'></script>
+    <script type='text/javascript' src='/code/scripts/calc.js'></script>
+    <script type='text/javascript' src='/code/scripts/update.js'></script>
+    <script type='text/javascript' src='/code/scripts/input.js'></script>
+    <script type='text/javascript' src='/code/scripts/server.js'></script>
+    <script type='text/javascript' src='/code/scripts/cena3d.js'></script>
+</body>
+
+</html>
