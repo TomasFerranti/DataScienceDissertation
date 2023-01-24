@@ -1,0 +1,27 @@
+version: '3.3'
+services:
+  server:
+    build: src/TextureExtractor/.
+    container_name: server
+    ports:
+      - '8000:8000/tcp'
+    volumes:
+      - './src/TextureExtractor/app:/TextureExtractor/app:Z'
+      - './images:/TextureExtractor/app/public/images:Z'
+      - './calib:/TextureExtractor/app/public/calib:Z'
+    image: 'server:latest'
+    tty: false
+    stdin_open: false
+  interface:
+    build: src/SMTools/.
+    network_mode: "host"
+    environment:
+      DISPLAY: $DISPLAY
+    container_name: interface
+    volumes:
+      - './src/SMTools/app:/SMTools/app:Z'
+      - './images:/SMTools/app/images:Z'
+      - './calib:/SMTools/app/calib:Z'
+    image: 'interface:latest'
+    depends_on:
+      - server

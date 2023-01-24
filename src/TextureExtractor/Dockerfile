@@ -3,12 +3,11 @@ FROM node:lts-alpine
 # Node environment settings
 ENV NODE_ENV=production
 
-# Set workdir name and copy content
+# Set workdir name
 WORKDIR /TextureExtractor
-# COPY . .
 
 # Install necessary packages for Node
-COPY ["package.json", "package-lock.json*", "./"]
+COPY ["app/package.json", "app/package-lock.json*", "./"]
 RUN npm install --production --silent
 
 # Expose port of docker for connection
@@ -20,4 +19,4 @@ USER node
 
 # Start server
 WORKDIR /TextureExtractor/app
-CMD ["node", "nodeServer.js"]
+CMD ["nohup", "node", "nodeServer.js", "&"]

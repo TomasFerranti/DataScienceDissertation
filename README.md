@@ -30,14 +30,16 @@ The files of the project are separated into the following folders:
 
 # Requirements
 
-It is necessary to have a [Docker](https://www.docker.com/) installation. Currently it has three bash scripts which are used to build, run and clear the files needed for the project. These were created with Linux commands (if you use other operational system you are encouraged to find equivalent commands and make a pull request).
+It is necessary to have a [Docker](https://www.docker.com/) and [Docker-Compose](https://docs.docker.com/compose/) installation. Currently it has three bash scripts which are used to build, run and clear the files needed for the project. These were created with Linux commands and environment (if you use other operational system you are encouraged to find equivalent commands and make a pull request).
 
 # How to run
 
-If you wish to run any of the tools separately, you can start a terminal inside its folder and run the following commands:
+Currently you can only run both tools at the same time. For that you can start a terminal inside the root folder and run the following commands one at a time
 
 > sudo bash build.sh
+> 
 > sudo bash run.sh
+>
 > sudo bash clear.sh
 
-It is recommended to run both tools at the same time as they compliment each other. This can be done by running the same commands inside _src/_, where both bash scripts are merged. If you have any ideas or suggestions for improvement please file an issue in this repository.
+where _build.sh_ creates all docker images, folders and files needed, _run.sh_ starts the server and launches the interface and _clear.sh_ clears everything we builded. If you have any ideas or suggestions for improvement please file an issue in this repository.
