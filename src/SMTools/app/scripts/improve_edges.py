@@ -5,7 +5,7 @@ import matplotlib.pyplot as plt
 import copy
 
 from scripts.improve_edge import improveEdges, cannyGaussian
-from scripts.shared_functions import readImage, saveToFile, readJson, createImageDict
+from scripts.shared_functions import readImage, saveToFile, readJson, createImageDict, plotEdge
 
 
 def improveEdgesDict(img_dict, img_calib):
@@ -40,22 +40,6 @@ def improveEdgesDict(img_dict, img_calib):
         img_calib_improved['pontosguia'][i] = [[int(cEscala * x + wInicio), int(cEscala * y + hInicio)]
                                                for x, y in img_calib_improved['pontosguia'][i]]
     return img_calib_improved
-
-
-def plotEdge(p0, p1, color, ax):
-    """
-    plotEdge creates segment between points p0 and p1 of a given color on a plot ax
-
-    Parameters
-    - p0:list, of len 2
-    - p1:list, of len 2
-    - color:str, must be available to matplotlib
-    - ax:matplotlib_class, object which indicates a plot area
-
-    Return
-    - :None
-    """
-    ax.plot([p0[0], p1[0]], [p0[1], p1[1]], c=color)
 
 
 def plotImprovement(img_dict, img_calib, img_calib_improved):

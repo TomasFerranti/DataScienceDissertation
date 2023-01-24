@@ -1,3 +1,6 @@
+"""
+interface.py is an user interface for operating every routine created on the other scripts
+"""
 import os
 import time
 import json
@@ -21,6 +24,18 @@ PATHS = {
 
 
 def saveOutput(filename, data, data_type, output_path="standard"):
+    """
+    saveOutput saves any result from the routines using PATHS environment
+
+    Parameters
+    - filename:str, filename for saving
+    - data:np.array or dict, data to save
+    - data_type:str, type of data to save
+    - output_path:str, option for specyfing a custom path instead of env
+    Return
+    - :None
+    """
+
     if output_path == "standard":
         if data_type == "json":
             output_path = PATHS['MAIN_FOLDER'] + PATHS['CALIB']
@@ -46,10 +61,25 @@ def saveOutput(filename, data, data_type, output_path="standard"):
 
 
 def clearScreen():
+    """
+    clearScreen uses shell command to clear terminal
+    Parameters
+    - :None
+    Return
+    - :None
+    """
     os.system("clear")
 
 
 def interfaceBegin(main_title_desc):
+    """
+    interfaceBegin establishes a pattern of starting an interface
+
+    Parameters
+    - main_title_desc:str, a brief title description
+    Return
+    - :None
+    """
     clearScreen()
     print("Welcome to the interface of", main_title_desc, ".\n")
     option_chosen = input("\nShould we start the process? (y/n)\n")
@@ -61,11 +91,27 @@ def interfaceBegin(main_title_desc):
 
 
 def interfaceEnd():
+    """
+    interfaceBegin establishes a pattern of ending an interface
+
+    Parameters
+    - :None
+    Return
+    - :None
+    """
     print("\nProcess complete. All results were saved.\n")
     input("\nPress ANY KEY to continue.\n")
 
 
 def setVariableInterface():
+    """
+    setVariableInterface creates an interface for editing an environment variable
+
+    Parameters
+    - :None
+    Return
+    - :None
+    """
     while True:
         clearScreen()
         print("Welcome to the interface of setting an enviromnent variable.\n")
@@ -88,6 +134,14 @@ def setVariableInterface():
 
 
 def splitImageInterface():
+    """
+    splitImageInterface creates an interface for splitting the image in the environment variable
+
+    Parameters
+    - :None
+    Return
+    - :None
+    """
     if not interfaceBegin("splitting a stereo image"):
         return
 
@@ -119,6 +173,14 @@ def splitImageInterface():
 
 
 def improveEdgesInterface():
+    """
+    improveEdgesInterface creates an interface for improving the edges of calibration in the environment variable
+
+    Parameters
+    - :None
+    Return
+    - :None
+    """
     if not interfaceBegin("improving calibration edges"):
         return
 
@@ -154,6 +216,14 @@ def improveEdgesInterface():
 
 
 def camCalibInterface():
+    """
+    camCalibInterface creates an interface for calibrating the camera of the calibration in the environment variable
+
+    Parameters
+    - :None
+    Return
+    - :None
+    """
     if not interfaceBegin("camera calibrating"):
         return
 
@@ -182,6 +252,14 @@ def camCalibInterface():
 
 
 def stereoMatchingInterface():
+    """
+    stereoMatchingInterface creates an interface for propagating a calibration from one stereo pair to another in the environment variable
+
+    Parameters
+    - :None
+    Return
+    - :None
+    """
     if not interfaceBegin("stereo matching"):
         return
 
@@ -238,6 +316,15 @@ def stereoMatchingInterface():
 
 
 def fullPipelineInterface():
+    """
+    fullPipelineInterface creates an interface which wrapps all other functions in a single continuous pipeline, which
+    split image -> create calibration -> improve edges -> calibrate camera -> propagate to pair -> improve edges -> calibrate camera
+
+    Parameters
+    - :None
+    Return
+    - :None
+    """
     if not interfaceBegin("stereo matching"):
         return
 
@@ -334,6 +421,14 @@ OPTIONS_SCRIPTS = [("0", "Set Environment Variable (MANUAL)", setVariableInterfa
 
 
 def mainMenu():
+    """
+    mainMenu controls the interfaces and environment variables interacting with the user
+
+    Parameters
+    - :None
+    Return
+    - :None
+    """
     while True:
         clearScreen()
         print("Welcome to the main menu of StereoMatcher. \n \n")

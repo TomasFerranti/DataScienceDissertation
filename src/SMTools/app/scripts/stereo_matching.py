@@ -1,3 +1,6 @@
+"""
+stereo_matching.py is a collection of functions to build an algorithm that automatically finds edges equivalence between two images
+"""
 import cv2 as cv
 import numpy as np
 import sys
@@ -7,6 +10,17 @@ from scripts.shared_functions import saveToFile, readJson, readImage, createImag
 
 
 def sift(img1_BGR, img2_BGR):
+    """
+    sift creates two lists of points which are roughly equivalent between img1 and img2 
+
+    Parameters
+    - img1_BGR:np.array, numpy array of shape (m,n,3)
+    - img2_BGR:np.array, numpy array of shape (m,n,3)
+
+    Return
+    - pts1:list, list of lists of len 2 indicating points on img1
+    - pts2:list, list of lists of len 2 indicating points on img2
+    """
     # SOURCE: https://docs.opencv.org/3.4/da/de9/tutorial_py_epipolar_geometry.html
 
     img1_GRAY = cv.cvtColor(img1_BGR, cv.COLOR_BGR2GRAY)
@@ -40,6 +54,17 @@ def sift(img1_BGR, img2_BGR):
 
 
 def edgeMatch(img1_pts_match, img2_pts_match, edge):
+    """
+    edgeMatch finds the best possible match for an edge using a list of equivalent points of two images
+
+    Parameters
+    - img1_pts_match:list, list of lists of len 2 indicating points on img1
+    - img2_pts_match:list, list of lists of len 2 indicating points on img2
+    - edge:np.array, array of size (2,2) indicating two points (an edge) over axis 0
+
+    Return
+    - edge:np.array, array of size (2,2) indicating two points (an edge) over axis 0
+    """
     edge = edge.astype(np.float64)
     closest_ds = np.zeros(2)
     for point_idx in range(edge.shape[0]):
@@ -62,19 +87,31 @@ def edgeMatch(img1_pts_match, img2_pts_match, edge):
     return edge
 
 
-def stereoEdgesMatching(img1_data, img1_dict, img2_data, img2_dict):
+def stereoEdgesMatching(img1_calib, img1_dict, img2_calib, img2_dict):
+    """
+    stereoEdgesMatching creates a routine to automatically copy and modify a calibration for img2 from img1
+
+    Parameters
+    - img1_dict:dict, object with data about an image and its parameters
+    - img1_calib:dict, object with data about an image calibration 
+    - img2_dict:dict, object with data about an image and its parameters
+    - img2_calib:dict, object with data about an image calibration 
+
+    Return
+    - img2_calib:dict, object with data about an image calibration 
+    """
     img1_pts_match, img2_pts_match = sift(img1_dict['img'], img2_dict['img'])
 
     cEscala, wInicio, hInicio = img2_dict['cEscala'], img2_dict['wInicio'], img2_dict['hInicio']
     for i in range(3):
         # scale to original image size
-        img2_data['pontosguia'][i] = [[int((1 / cEscala) * (x - wInicio)),
+        img2_calib['pontosguia'][i] = [[int((1 / cEscala) * (x - wInicio)),
                                        int((1 / cEscala) * (y - hInicio))]
-                                      for x, y in img2_data['pontosguia'][i]]
+                                       for x, y in img2_calib['pontosguia'][i]]
         # input is in format list
-        edges = [[img2_data['pontosguia'][i][2*j],
-                  img2_data['pontosguia'][i][2*j + 1]]
-                 for j in range(int(len(img2_data['pontosguia'][i]) / 2))]
+        edges = [[img2_calib['pontosguia'][i][2*j],
+                  img2_calib['pontosguia'][i][2*j + 1]]
+                 for j in range(int(len(img2_calib['pontosguia'][i]) / 2))]
         # match each edge on the other image
         edges = [edgeMatch(img1_pts_match, img2_pts_match, np.array(edge))
                  for edge in edges]
@@ -86,29 +123,29 @@ def stereoEdgesMatching(img1_data, img1_dict, img2_data, img2_dict):
                   int((cEscala * y) + hInicio)]
                  for x, y in edges]
 
-        img2_data['pontosguia'][i] = edges
-    return img2_data
+        img2_calib['pontosguia'][i] = edges
+    return img2_calib
+
+# Testing setup
+# def main():
+#     filename = sys.argv[1]
+#     img1_calib = readJson(filename)
+#     img1 = readImage(img1_calib, "processed_data/")
+#     img1_dict = createImageDict(img1)
+
+#     img2_calib = copy.deepcopy(img1_calib)
+#     img2_calib['nomeImagem'] = getStereoFilename(img1_calib['nomeImagem'])
+#     img2 = readImage(img2_calib, "processed_data/")
+#     img2_dict = createImageDict(img2)
+
+#     img2_calib = stereoEdgesMatching(
+#         img1_calib, img1_dict, img2_calib, img2_dict)
+
+#     plotCalibSegs([img1_dict, img2_dict], [img1_calib, img2_calib])
+
+#     filepath_save = "processed_data/" + img2_calib['nomeImagem'] + ".json"
+#     saveToFile(img2_calib, filepath_save)
 
 
-def main():
-    filename = sys.argv[1]
-    img1_calib = readJson(filename)
-    img1 = readImage(img1_calib, "processed_data/")
-    img1_dict = createImageDict(img1)
-
-    img2_calib = copy.deepcopy(img1_calib)
-    img2_calib['nomeImagem'] = getStereoFilename(img1_calib['nomeImagem'])
-    img2 = readImage(img2_calib, "processed_data/")
-    img2_dict = createImageDict(img2)
-
-    img2_calib = stereoEdgesMatching(
-        img1_calib, img1_dict, img2_calib, img2_dict)
-
-    plotCalibSegs([img1_dict, img2_dict], [img1_calib, img2_calib])
-
-    filepath_save = "processed_data/" + img2_calib['nomeImagem'] + ".json"
-    saveToFile(img2_calib, filepath_save)
-
-
-if __name__ == "__main__":
-    main()
+# if __name__ == "__main__":
+#     main()

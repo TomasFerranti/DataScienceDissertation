@@ -1,17 +1,43 @@
+"""
+split_image.py is a collection of functions to build an algorithm that automatically splits a stereo image in left, middle and right
+"""
 import cv2 as cv
 import numpy as np
 import sys
 
-# Merge everything to test with the available images
-
 
 def getLogDist(array):
+    """
+    getLogDist creates a array of weights with shape of the input, where the earlier observations have more weight
+
+    Parameters
+    - array:np.array, numpy array of shape (n,)
+
+    Return
+    - weight:np.array, numpy array of shape (n,) and float values between [0, 1] * array
+    """
     L = array.shape[0]
     X = np.arange(L)
-    return array * (np.log(1 + L - X) / np.log(1 + L))
+    weight = array * (np.log(1 + L - X) / np.log(1 + L))
+    return weight
 
 
 def findBestAdds(img, c_x, c_y, r_x, r_y, image_left, ds=5):
+    """
+    findBestAdds expands the rectangle looking for the two segments of distance ds with the highest difference in RGB values
+
+    Parameters
+    - img:np.array, numpy array of shape (m,n,3)
+    - c_x:int, coordinate x of center of rectangle
+    - c_y:int, coordinate y of center of rectangle
+    - r_x:list, list of two integers indicating the positive radius for left and right from center
+    - r_y:list, list of two integers indicating the positive radius for up and down from center
+    - image_left:bool, indicates if padding is needed (in case of right image)
+    - ds:int, length of difference between segments
+
+    Return
+    - best_adds:list, four values to add to each radius (r_x[0], r_x[1], r_y[0], r_y[1]), respectively
+    """
     # X axis padding necessary for right image
     x_padding = int(0.5*img.shape[1])
     if image_left:
@@ -24,23 +50,23 @@ def findBestAdds(img, c_x, c_y, r_x, r_y, image_left, ds=5):
     # Finding best adds for each rectangle side
     best_adds = []
     for coord in ['x', 'y']:
-        for ind in [0, 1]:
+        for direction in ["minus", "plus"]:
             # Segs to test the best add based on for loop variables
             if coord == 'x':
-                if ind == 0:
+                if direction == "minus":
                     segs = img[(c_y - r_y[0]): (c_y + r_y[1]),
                                0: (c_x - r_x[0])]
                 else:
                     segs = img[(c_y - r_y[0]): (c_y + r_y[1]),
                                (c_x + r_x[1]): img.shape[1]]
             else:
-                if ind == 0:
+                if direction == "minus":
                     segs = img[0: (c_y - r_y[0]),
                                (c_x - r_x[0]): (c_x + r_x[1])]
                 else:
                     segs = img[(c_y + r_y[1]): img.shape[0],
                                (c_x - r_x[0]): (c_x + r_x[1])]
-            if ind == 0:
+            if direction == "minus":
                 segs = np.flip(segs)
 
             # Get best add
@@ -53,6 +79,17 @@ def findBestAdds(img, c_x, c_y, r_x, r_y, image_left, ds=5):
 
 
 def getStereoSplit(img):
+    """
+    getStereoSplit splits an img into three pieces (left, middle, right) using a deterministic heuristic
+
+    Parameters
+    - img:np.array, numpy array of shape (m,n,3)
+
+    Return
+    - imgL:np.array, numpy array of shape (mS,nS,3)
+    - imgR:np.array, numpy array of shape (mS,nS,3)
+    - imgM:np.array, numpy array of shape (mM,nM,3)
+    """
     # Initial centers and radius of images left and right
     imgL_c_x = int(1/4 * img.shape[1])
     imgR_c_x = int(3/4 * img.shape[1])
@@ -99,19 +136,19 @@ def getStereoSplit(img):
 
     return imgL, imgR, imgM
 
+# Testing setup
+# def main():
+#     filename = sys.argv[1]
+#     basepath = "imagens_stereo_IMS/"
+#     outpath = "processed_data/"
+#     filepath = basepath + filename + ".jpg"
+#     img = cv.imread(filepath)
 
-def main():
-    filename = sys.argv[1]
-    basepath = "imagens_stereo_IMS/"
-    outpath = "processed_data/"
-    filepath = basepath + filename + ".jpg"
-    img = cv.imread(filepath)
-
-    imgL, imgR, imgM = getStereoSplit(img)
-    cv.imwrite(outpath + filename + "_left.jpg", imgL)
-    cv.imwrite(outpath + filename + "_right.jpg", imgR)
-    cv.imwrite(outpath + filename + "_middle.jpg", imgM)
+#     imgL, imgR, imgM = getStereoSplit(img)
+#     cv.imwrite(outpath + filename + "_left.jpg", imgL)
+#     cv.imwrite(outpath + filename + "_right.jpg", imgR)
+#     cv.imwrite(outpath + filename + "_middle.jpg", imgM)
 
 
-if __name__ == "__main__":
-    main()
+# if __name__ == "__main__":
+#     main()
